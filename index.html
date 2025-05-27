@@ -1,0 +1,365 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصات إعداد العروض التقديمية</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        h1 {
+            color: #1e3a8a;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        .author {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        .search-bar {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .search-bar input {
+            width: 70%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        .search-bar button {
+            background-color: #1e3a8a;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+        .tool {
+            background-color: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: right;
+        }
+        .tool-number {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        .tool-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .tool-title a {
+            color: #1e3a8a;
+            text-decoration: none;
+        }
+        .tool-title a:hover {
+            text-decoration: underline;
+        }
+        .tool-description {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        .tool-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        .tool-tags span {
+            background-color: #e0e0e0;
+            color: #333;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+        }
+        .tool-button {
+            display: inline-block;
+            padding: 8px 15px;
+            border-radius: 5px;
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .tool-button:hover {
+            opacity: 0.9;
+        }
+        .blue { background-color: #1e3a8a; }
+        .pink { background-color: #d81b60; }
+        .green { background-color: #2e7d32; }
+        .purple { background-color: #6a1b9a; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>منصات إعداد العروض التقديمية</h1>
+        <div class="author">إعداد الأستاذ ياسر مدير مكتبة كلية الخدمة الاجتماعية بالفيوم</div>
+        <div class="search-bar">
+            <input type="text" placeholder="البحث في دليل منصات العروض التقديمية...">
+            <button>ابحث</button>
+        </div>
+
+        <div class="tool">
+            <div class="tool-number">#1</div>
+            <div class="tool-title"><a href="https://gamma.app">GAMMA.app</a></div>
+            <div class="tool-description">منصة ذكية لإنشاء عروض تقديمية تفاعلية بسهولة وسرعة</div>
+            <div class="tool-tags">
+                <span>interactive</span>
+                <span>templates</span>
+            </div>
+            <a href="https://gamma.app" class="tool-button purple">الدخول للموقع</a>
+        </div>
+
+        <div class="tool">
+            <div class="tool-number">#2</div>
+            <div class="tool-title"><a href="https://slidespeak.co">SlideSpeak.co</a></div>
+            <div class="tool-description">أداة ذكية لتحويل المستندات إلى عروض تقديمية تلقائيًا</div>
+            <div class="tool-tags">
+                <span>text-to-slide</span>
+            </div>
+            <a href="https://slidespeak.co" class="tool-button blue">الدخول للموقع</a>
+        </div>
+
+        <div class="tool">
+            <div class="tool-number">#3</div>
+            <div class="tool-title"><a href="https://tome.app">Tome.app</a></div>
+            <div class="tool-description">منصة لإنشاء عروض تقديمية بمساعدة الذكاء الاصطناعي مع قوالب متنوعة</div>
+            <div class="tool-tags">
+                <span>dynamic</span>
+                <span>storytelling</span>
+            </div>
+            <a href="https://tome.app" class="tool-button pink">الدخول للموقع</a>
+        </div>
+
+        <div class="tool">
+            <div class="tool-number">#4</div>
+            <div class="tool-title"><a href="https://slidesai.io">SlidesAI.io</a></div>
+            <div class="tool-description">إضافة ذكية لإنشاء عروض تقديمية داخل جوجل سلايد بسرعة</div>
+            <div class="tool-tags">
+                <span>text-to-slide</span>
+            </div>
+            <a href="https://slidesai.io" class="tool-button green">الدخول للموقع</a>
+        </div>
+
+        <div class="tool">
+            <div class="tool-number">#5</div>
+            <div class="tool-title"><a href="https://decktopus.com">Decktopus</a></div>
+            <div class="tool-description">أداة ذكية لإنشاء عروض تقديمية بتصاميم جاهزة في دقائق</div>
+            <div class="tool-tags">
+                <span>content</span>
+                <span>suggestions</span>
+                <span>templates</span>
+            </div>
+            <a href="https://decktopus.com" class="tool-button blue">الدخول للموقع</a>
+        </div>
+
+        <div class="tool">
+            <div class="tool-number">#6</div>
+            <div class="tool-title"><a href="https://beautiful.ai">Beautiful.ai</a></div>
+            <div class="tool-description">منصة لتصميم عروض تقديمية أنيقة باستخدام الذكاء الاصطناعي</div>
+            <div class="tool-tags">
+                <span>design</span>
+            </div>
+            <a href="https://beautiful.ai" class="tool-button purple">الدخول للموقع</a>
+        </div>
+
+        <div class="tool">
+            <div class="tool-number">#7</div>
+            <div class="tool-title"><a href="https://presentations.ai">Presentations.ai</a></div>
+            <div class="tool-description">منصة ذكية لإنشاء عروض تقديمية احترافية بتصاميم قابلة للتخصيص</div>
+            <div class="tool-tags">
+                <span>customization</span>
+            </div>
+            <a href="https://presentations.ai" class="tool-button blue">الدخول للموقع</a>
+        </div>
+
+        <div class="tool">
+            <div class="tool-number">#8</div>
+            <div class="tool-title"><a href="https://pitch.com">Pitch.com</a></div>
+            <div class="tool-description">منصة لإنشاء عروض تقديمية حديثة مع إمكانية التعاون بين الفرق</div>
+            <div class="tool-tags">
+                <span>teams</span>
+                <span>collaboration</span>
+            </div>
+            <a href="https://pitch.com" class="tool-button pink">الدخول للموقع</a>
+        </div>
+
+        <div class="tool">
+            <div class="tool-number">#9</div>
+            <div class="tool-title"><a href="https://deckrobot.com">Deckrobot.com</a></div>
+            <div class="tool-description">أداة ذكية لتحسين وتنسيق العروض التقديمية تلقائيًا</div>
+            <div class="tool-tags">
+                <span>content</span>
+                <span>design</span>
+            </div>
+            <a href="https://deckrobot.com" class="tool-button green">الدخول للموقع</a>
+        </div>
+
+        <div class="tool">
+            <div class="tool-number">#10</div>
+            <div class="tool-title"><a href="https://plus.ai">Plus.ai</a></div>
+            <div class="tool-description">منصة ذكية لإنشاء عروض تقديمية احترافية بسرعة وكفاءة</div>
+            <div class="tool-tags">
+                <span>efficient</span>
+            </div>
+            <a href="https://plus.ai" class="tool-button blue">الدخول للموقع</a>
+        </div>
+
+        <div class="tool">
+            <div class="tool-number">#11</div>
+            <div class="tool-title"><a href="https://slidebean.com">Slidebean</a></div>
+            <div class="tool-description">منصة لإنشاء عروض تقديمية احترافية بتصاميم جاهزة وسهلة</div>
+            <div class="tool-tags">
+                <span>customization</span>
+                <span>templates</span>
+            </div>
+            <a href="https://slidebean.com" class="tool-button purple">الدخول للموقع</a>
+        </div>
+
+        <div class="tool">
+            <div class="tool-number">#12</div>
+            <div class="tool-title"><a href="https://synthesis.ai">Synthesis</a></div>
+            <div class="tool-description">منصة ذكية لإنشاء عروض تقديمية بصرية مع عناصر تفاعلية</div>
+            <div class="tool-tags">
+                <span>avatars</span>
+                <span>video</span>
+            </div>
+            <a href="https://synthesis.ai" class="tool-button blue">الدخول للموقع</a>
+        </div>
+
+        <div class="tool">
+            <div class="tool-number">#13</div>
+            <div class="tool-title"><a href="https://simplified.com">Simplified</a></div>
+            <div class="tool-description">منصة شاملة لإنشاء عروض تقديمية مع أدوات تصميم متعددة</div>
+            <div class="tool-tags">
+                <span>multipurpose</span>
+                <span>design</span>
+            </div>
+            <a href="https://simplified.com" class="tool-button pink">الدخول للموقع</a>
+        </div>
+
+        <div class="tool">
+            <div class="tool-number">#14</div>
+            <div class="tool-title"><a href="https://sendsteps.com">Sendsteps</a></div>
+            <div class="tool-description">أداة لإنشاء عروض تقديمية تفاعلية مع إمكانية التعليق والتفاعل</div>
+            <div class="tool-tags">
+                <span>feedback</span>
+                <span>interactive</span>
+            </div>
+            <a href="https://sendsteps.com" class="tool-button green">الدخول للموقع</a>
+        </div>
+
+        <div class="tool">
+            <div class="tool-number">#15</div>
+            <div class="tool-title"><a href="https://kroma.ai">Kroma</a></div>
+            <div class="tool-description">منصة ذكية لإنشاء عروض تقديمية بصرية مع قوالب احترافية</div>
+            <div class="tool-tags">
+                <span>professional</span>
+                <span>templates</span>
+            </div>
+            <a href="https://kroma.ai" class="tool-button blue">الدخول للموقع</a>
+        </div>
+
+        <div class="tool">
+            <div class="tool-number">#16</div>
+            <div class="tool-title"><a href="https://prezi.com">Prezi</a></div>
+            <div class="tool-description">منصة لإنشاء عروض تقديمية ديناميكية وتفاعلية بطريقة مبتكرة</div>
+            <div class="tool-tags">
+                <span>interactive</span>
+                <span>dynamic</span>
+            </div>
+            <a href="https://prezi.com" class="tool-button purple">الدخول للموقع</a>
+        </div>
+
+        <div class="tool">
+            <div class="tool-number">#17</div>
+            <div class="tool-title"><a href="https://vidwud.com">Vidwud</a></div>
+            <div class="tool-description">أداة لإنشاء عروض تقديمية بصرية مع قوالب فيديو تفاعلية</div>
+            <div class="tool-tags">
+                <span>templates</span>
+                <span>video</span>
+            </div>
+            <a href="https://vidwud.com" class="tool-button blue">الدخول للموقع</a>
+        </div>
+
+        <div class="tool">
+            <div class="tool-number">#18</div>
+            <div class="tool-title"><a href="https://canva.com">Canva</a></div>
+            <div class="tool-description">منصة تصميم شاملة لإنشاء عروض تقديمية بقوالب جاهزة وسهلة</div>
+            <div class="tool-tags">
+                <span>design</span>
+                <span>templates</span>
+            </div>
+            <a href="https://canva.com" class="tool-button pink">الدخول للموقع</a>
+        </div>
+
+        <div class="tool">
+            <div class="tool-number">#19</div>
+            <div class="tool-title"><a href="https://slidespilot.com">Slidespilot</a></div>
+            <div class="tool-description">منصة ذكية لإنشاء عروض تقديمية احترافية بسهولة وسرعة</div>
+            <div class="tool-tags">
+                <span>professional</span>
+                <span>templates</span>
+            </div>
+            <a href="https://slidespilot.com" class="tool-button green">الدخول للموقع</a>
+        </div>
+    </div>
+</body>
+</html>
